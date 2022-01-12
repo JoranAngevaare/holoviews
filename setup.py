@@ -64,7 +64,7 @@ extras_require["basic_tests"] = (
 
 extras_require["nbtests"] = (
         extras_require["recommended"]
-        + open_requirements('requirements/nbtest_requirements.txt'))
+        + open_requirements('requirements/nbtests_requirements.txt'))
 
 
 extras_require['doc'] = (extras_require['examples']
