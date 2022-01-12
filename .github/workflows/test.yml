@@ -65,7 +65,7 @@ jobs:
           conda list
         # Temporary step for Mac only due doit to develop_install failing
       - name: doit develop_install on Mac
-        if: matrix.os == 'macos-latest' & matrix.python_version != 3.9
+        if: matrix.os == 'macos-latest' && matrix.python_version != 3.9
         run: |
           eval "$(conda shell.bash hook)"
           conda activate test-environment
