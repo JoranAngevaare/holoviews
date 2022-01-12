@@ -99,7 +99,7 @@ jobs:
         run: |
           eval "$(conda shell.bash hook)"
           conda activate test-environment
-          yes | conda install mpl_sample_data
+          conda install mpl_sample_data
           for f in $(ls requirements); do echo $; pip install -r requirements/$f ; done
           doit env_capture
           doit test_flakes
