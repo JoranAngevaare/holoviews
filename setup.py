@@ -9,65 +9,41 @@ from setuptools import setup, find_packages
 
 import pyct.build
 
-setup_args = {}
-install_requires = [
-    "param >=1.9.3,<2.0",
-    "numpy >=1.0",
-    "pyviz_comms >=0.7.4",
-    "panel >=0.9.5",
-    "colorcet",
-    "pandas >=0.20.0",
-]
 
-extras_require = {}
+def open_requirements(path):
+    with open(path) as f:
+        requires = [
+            r.split('/')[-1] if r.startswith('git+') else r
+            for r in f.read().splitlines()]
+    return requires
+
+
+setup_args = dict()
+extras_require = dict()
+
+install_requires = open_requirements('requirements/requirements.txt')
 
 # Notebook dependencies
-extras_require["notebook"] = ["ipython >=5.4.0", "notebook"]
+extras_require["notebook"] = open_requirements('requirements/notebook_requirements.txt')
 
 # IPython Notebook + pandas + matplotlib + bokeh
-extras_require["recommended"] = extras_require["notebook"] + [
-    "matplotlib >=3",
-    "bokeh >=1.1.0",
-]
+extras_require["recommended"] = (
+        extras_require["notebook"]
+        + open_requirements('requirements/recommended_requirements.txt')
+)
 
 # Requirements to run all examples
-extras_require["examples"] = extras_require["recommended"] + [
-    "networkx",
-    "pillow",
-    "xarray >=0.10.4",
-    "plotly >=4.0",
-    'dash >=1.16',
-    "streamz >=0.5.0",
-    "datashader >=0.11.1",
-    "ffmpeg",
-    "cftime",
-    "netcdf4",
-    "dask",
-    "scipy",
-    "shapely",
-    "scikit-image"
-]
+extras_require["examples"] = (
+        extras_require["recommended"]
+        + open_requirements('requirements/examples_requirements.txt'))
 
 # Extra third-party libraries
-extras_require["extras"] = extras_require["examples"] + [
-    "pscript ==0.7.1",
-]
+extras_require["extras"] = (
+        extras_require["examples"]
+        + open_requirements('requirements/extras_requirements.txt'))
 
 # Test requirements
-extras_require['tests'] = [
-    'pytest',
-    'pytest-cov',
-    'mock',
-    'flake8',
-    'coveralls',
-    'path.py',
-    'matplotlib >=3',
-    'nbsmoke >=0.2.0',
-    'nbconvert',
-    'twine',
-    'rfc3986',
-    'keyring'
-]
+extras_require['tests'] = open_requirements('requirements/tests_requirements.txt')
 
 extras_require["unit_tests"] = extras_require["examples"] + extras_require["tests"]
 
@@ -78,40 +54,24 @@ extras_require["unit_tests"] = extras_require["examples"] + extras_require["test
 # required to build the docs anyway.
 if sys.version_info.major > 2:
     extras_require["unit_tests"].extend(
-        [
-            "pyarrow",
-            "ibis-framework >=1.3",
-        ]  # spatialpandas incompatibility
+        open_requirements('requirements/unit_tests_requirements.txt')
     )
 
 extras_require["basic_tests"] = (
     extras_require["tests"]
-    + ["matplotlib >=3", "bokeh >=1.1.0", "pandas"]
-    + extras_require["notebook"]
-)
+    + open_requirements('requirements/basic_tests_requirements.txt')
+    + extras_require["notebook"])
 
-extras_require["nbtests"] = extras_require["recommended"] + [
-    "nose",
-    "deepdiff",
-]
+extras_require["nbtests"] = (
+        extras_require["recommended"]
+        + open_requirements('requirements/nbtest_requirements.txt'))
 
-extras_require['doc'] = extras_require['examples'] + [
-    'nbsite >=0.7.1',
-    'sphinx',
-    'mpl_sample_data >=3.1.3',
-    'pscript',
-    'graphviz',
-    'bokeh >2.2',
-    'pydata-sphinx-theme',
-    'sphinx-copybutton',
-    'pooch',
-]
 
-extras_require["build"] = [
-    "param >=1.7.0",
-    "setuptools >=30.3.0",
-    "pyct >=0.4.4",
-]
+extras_require['doc'] = (extras_require['examples']
+                         + open_requirements('requirements/doc_requirements.txt'))
+
+
+extras_require["build"] = open_requirements('requirements/build_requirements.txt')
 
 # Everything for examples and nosetests
 extras_require["all"] = list(

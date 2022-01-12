@@ -1,0 +1,3 @@
+# spatialpandas incompatibility
+pyarrow
+ibis-framework >=1.3

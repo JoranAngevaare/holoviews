@@ -1,0 +1,12 @@
+pytest
+pytest-cov
+mock
+flake8
+coveralls
+path.py
+matplotlib>=3
+nbsmoke>=0.2.0
+nbconvert
+twine
+rfc3986
+keyring
