@@ -94,15 +94,13 @@ jobs:
           eval "$(conda shell.bash hook)"
           conda activate test-environment
           conda install ${{ env.CHANS_DEV}} "cffi!=1.15.0"
-      - name: Setup python py3.9
-        if:  matrix.python-version == '3.9'
-        uses: actions/setup-python@v2.3.0
-        with:
-          python-version: ${{ matrix.python-version }}
       - name: install requirements && run test py3.9
         if: matrix.python-version == '3.9'
         run: |
-          for f in $(ls requirements); do pip install -r requirements/$f ; done
+          eval "$(conda shell.bash hook)"
+          conda activate test-environment
+          yes | conda install mpl_sample_data
+          for f in $(ls requirements); do echo $; pip install -r requirements/$f ; done
           doit env_capture
           doit test_flakes
           doit test_unit
